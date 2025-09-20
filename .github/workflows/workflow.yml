@@ -20,6 +20,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Ollama installation
+        run: curl -LO https://ollama.com/download/ollama-linux-amd64.tgz; sudo rm -rf /usr/lib/ollama; sudo tar -C /usr -xzf ollama-linux-amd64.tgz
+      - name: Startin Ollama
+        run: ollama serve
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Model run

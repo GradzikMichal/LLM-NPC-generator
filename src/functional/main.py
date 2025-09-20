@@ -38,7 +38,7 @@ def nargs_into_dict(list_of_str: list[str]) -> dict[str, str | int | float]:
                 arg_dict[split_string[0]] = split_string[1]
         return arg_dict
     except IndexError:
-        console.log(f"Error while parsing arguments: {list_of_str}. Model arguments in wrong format.",
+        console.log(f"Error while parsing arguments: {str(list_of_str)}. Model arguments in wrong format.",
                     style="red")
         console.log(f"Exiting the program", style="red")
         exit(1)

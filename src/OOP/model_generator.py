@@ -61,7 +61,7 @@ class LLMModelGenerator(BaseModel):
                 else:
                     self.model_args[split_string[0]] = split_string[1]
         except IndexError:
-            console.log(f"Error while parsing arguments: {self.list_of_str}. Model arguments in wrong format.",
+            console.log(f"Error while parsing arguments: {str(self.model_nargs)}. Model arguments in wrong format.",
                         style="red")
             console.log(f"Exiting the program", style="red")
             exit(1)

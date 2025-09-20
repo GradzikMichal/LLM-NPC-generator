@@ -38,10 +38,15 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-To run program in CLI mode:
+To run program in CLI mode written using functional programming:
 ```shell
-python src/main.py -s [path to story] -m [model name] --model_args [additional model arguments] -r [path to RAG folder] - v [verbose] 
+python src/functional/main.py -s [path to story] -m [model name] --model_args [additional model arguments] -r [path to RAG folder] - v [verbose] 
 ```
+To run program in CLI mode written using OOP:
+```shell
+python src/OOP/main.py -s [path to story] -m [model name] --model_args [additional model arguments] -r [path to RAG folder] - v [verbose] 
+```
+
 - Only path to the story is required argument. 
 - Model name should be taken from [Ollama page](https://ollama.com/search)
 - Additional model arguments should be in form key1=value1 key2=value2 e.g. repeat_last_n=-1

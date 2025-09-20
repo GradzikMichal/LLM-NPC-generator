@@ -2,6 +2,7 @@ import argparse
 from typing import Iterator
 from rich.console import Console
 from tqdm import tqdm
+
 import ollama
 from langchain_ollama import ChatOllama
 from langchain_community.document_loaders import UnstructuredMarkdownLoader, PyPDFLoader, TextLoader
@@ -161,11 +162,13 @@ def prepare_story(loaded_story: list[Document], sep: str, verbose: bool) -> list
     return docs
 
 
-def prepare_vectorstore(chunked_story: list[Document], verbose: bool) -> Chroma:
+def prepare_vectorstore(chunked_story: list[Document], rag_path: str, verbose: bool) -> Chroma:
     """
         Function for creating a vector store which enables RAG functionality. Uses Chroma as a vector store.
         :param chunked_story: Chunked story
         :type chunked_story: list[Document]
+        :param rag_path: Path to the RAG folder. If provided RAG becomes persisted and database is saved in provided folder.
+        :type rag_path:
         :param verbose: Verbose mode. Boolean to enable verbose mode. Default is False. Optional
         :type verbose: bool
         :return: Returns a vector store. Right now vectorstore is not persistent.
@@ -175,7 +178,10 @@ def prepare_vectorstore(chunked_story: list[Document], verbose: bool) -> Chroma:
         model_name="sentence-transformers/all-mpnet-base-v2",
         model_kwargs={"device": "cuda"},
     )
-    vectorstore = Chroma().from_documents(chunked_story, embeddings)
+    if rag_path == "":
+        vectorstore = Chroma().from_documents(chunked_story, embeddings)
+    else:
+        vectorstore = Chroma(persist_directory=rag_path).from_documents(chunked_story, embeddings)
     if verbose:
         console.log(f"Vectorstore created!", style="green")
     return vectorstore
@@ -234,15 +240,15 @@ if __name__ == '__main__':
                         help="Name of local Ollama LLM model to use. Default is llama3.1:8b")
     parser.add_argument("--model_args", nargs="*", default=[],
                         help="Additional arguments of the model. Use in a format key=value")
-    parser.add_argument("-s", "--story", required=True, type=str, help="Path to the story file.")
-    parser.add_argument("-r", "--rag_folder", default="chroma", type=str,
+    parser.add_argument("-s", "--story_path", required=True, type=str, help="Path to the story file.")
+    parser.add_argument("-r", "--rag_folder", default="", type=str,
                         help="Provide path for a RAG folder. Default is chroma.")
     parser.add_argument("-v", "--verbose", action="store_true", default=False, help="Enable verbose mode.")
     args = parser.parse_args()
     llm_model = model_creator(args.model_name, args.model_args)
-    story, separator = load_story(args.story, args.verbose)
+    story, separator = load_story(args.story_path, args.verbose)
     story = prepare_story(story, separator, args.verbose)
-    rag = prepare_vectorstore(story, args.verbose)
+    rag = prepare_vectorstore(story, args.rag_folder, args.verbose)
     prompt_template = prompt_template()
     OllamaLLM = combining_llm_with_rag(llm=llm_model, prompt=prompt_template, vectorstore=rag)
     console.log("LLM ready to use! Have fun!", style="green")

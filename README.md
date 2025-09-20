@@ -191,3 +191,6 @@ The name of the first character is repeated from the first prompt but character 
 This can be seen as two different persons as in real live.
 
 Other than this model provides results from `fantasy.md` so the RAG is working and helping model.
+
+---
+Additionally, I have created basic GUI for my own fun and learning process. It works almost exactly the same as CLI version, in this case user must provide story path and chose or write model name.

@@ -22,7 +22,7 @@ def nargs_into_dict(list_of_str: list[str]) -> dict[str, str | int | float]:
         Function for converting a list of strings into a dictionary
         :param list_of_str: List of strings in format of ["key1=value1", "key2=value2", ...]
         :type list_of_str: list[str]
-        :rtype: dict[str, str]
+        :rtype: dict[str, str | int | float]
         :return: A dictionary with keys as keys and values as values
         :raises error: If value in a list is not in format of ["key1=value1", "key2=value2", ...]
     """
@@ -73,7 +73,7 @@ def get_model(model_name: str) -> None:
         if digest != current_digest and current_digest in bars:
             bars[current_digest].close()
         if not digest:
-            print(response_progress.get('status'))
+            console.print(response_progress.get('status'))
             continue
         if digest not in bars and (total := response_progress.get('total')):
             bars[digest] = tqdm(total=total, desc=f'pulling {digest[7:19]}', unit='B', unit_scale=True)
@@ -131,11 +131,13 @@ def load_story(story_path: str, verbose: bool) -> (list[Document], str):
             loader = TextLoader(file_path=story_path)
     if loader is None:
         console.log(f"Error while loading story {story_path}. Unrecognized file type.", style="red")
+        console.log(f"Exiting the program", style="red")
         exit(1)
     try:
         loaded_story: list[Document] = loader.load()
     except FileNotFoundError:
         console.log(f"Error while loading story {story_path}. File not found!", style="red")
+        console.log(f"Exiting the program", style="red")
         exit(1)
     if verbose:
         console.log(f"Story loaded!", style="green")
@@ -153,13 +155,12 @@ def prepare_story(loaded_story: list[Document], sep: str, verbose: bool) -> list
         :type verbose: bool
         :return: List of chunked story.
         :rtype: list[Document]
-        :raises error: If file does not exist or file type is not supported.
     """
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=200, separator=sep)
-    docs = text_splitter.split_documents(documents=loaded_story)
+    documents = text_splitter.split_documents(documents=loaded_story)
     if verbose:
         console.log(f"Story chunked!", style="green")
-    return docs
+    return documents
 
 
 def prepare_vectorstore(chunked_story: list[Document], rag_path: str, verbose: bool) -> Chroma:
@@ -255,7 +256,7 @@ if __name__ == '__main__':
     while True:
         user_input = input("Provide prompt for a model or write quit to exit: ")
         if user_input.lower() == "quit":
-            console.log(f"Exited program.", style="red")
+            console.log(f"Exiting the program.", style="red")
             exit(0)
         result = OllamaLLM.invoke(user_input)
         print(result)

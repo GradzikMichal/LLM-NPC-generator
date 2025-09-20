@@ -26,5 +26,7 @@ jobs:
         run: pip install -r requirements.txt
       - name: Running Ollama
         run: sudo systemctl daemon-reload; sudo systemctl enable ollama
-      - name: Model run
-        run: echo "quit" | python src/main.py -s docs/fantasy.md --model_args num_ctx=1024 repeat_last_n=-1
+      - name: Model run - functional programing
+        run: echo "quit" | python src/functional/main.py -s docs/fantasy.md --model_args num_ctx=1024 repeat_last_n=-1
+      - name: Model run - OOP
+        run: echo "quit" | python src/OOP/main.py -s docs/fantasy.md --model_args num_ctx=1024 repeat_last_n=-1

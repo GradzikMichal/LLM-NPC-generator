@@ -65,7 +65,7 @@ def get_model(model_name: str) -> None:
 
         Function taken from examples at https://github.com/ollama/ollama-python/blob/main/examples/pull.py.
     """
-    console.log("Model not available locally. Trying to download model.", style="gray")
+    console.log("Model not available locally. Trying to download model.", style="white")
     current_digest, bars = '', {}
     ollama_pull: ollama.ProgressResponse | Iterator[ollama.ProgressResponse] = ollama.pull(model_name, stream=True)
     for response_progress in ollama_pull:

@@ -27,4 +27,4 @@ jobs:
       - name: Running Ollama
         run: sudo systemctl daemon-reload; sudo systemctl enable ollama
       - name: Model run
-        run: python src/main.py -s docs/fantasy.md --model_args num_ctx=1024 repeat_last_n=-1 <<< "Tell me something about Sundering"; echo quit
+        run: echo "quit" | python src/main.py -s docs/fantasy.md --model_args num_ctx=1024 repeat_last_n=-1

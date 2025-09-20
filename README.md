@@ -47,17 +47,17 @@ To run program in CLI mode written using OOP:
 python src/OOP/main.py -s [path to story] -m [model name] --model_args [additional model arguments] -r [path to RAG folder] - v [verbose] 
 ```
 
-- Only path to the story is required argument. 
-- Model name should be taken from [Ollama page](https://ollama.com/search)
-- Additional model arguments should be in form key1=value1 key2=value2 e.g. repeat_last_n=-1
-- Path to the RAG allows one to change where RAG database is saved
+- Only path to the story is required argument, 
+- Model name should be taken from [Ollama page](https://ollama.com/search),
+- Additional model arguments should be in form key1=value1 key2=value2 e.g. repeat_last_n=-1,
+- Path to the RAG allows one to change RAG type to persistent and choose where RAG database is saved,
 - Setting verbose enables more logs.
 
 After model is loaded one can provide prompt to a model or write `quit` to exit application.
 
 ## Default settings
 - As a default model I chose [llama3.1:8b](https://ollama.com/library/llama3.1) because of the model results and size which allowed me to load whole model on GPU. In my case this model was fast and efficient.
-- I have used `num_ctx=40960, repeat_last_n=-1, repeat_penalty=1.2` as a default model parameters. Does allow me to get acceptable results.
+- I have used `num_ctx=40960, repeat_last_n=-1, repeat_penalty=1.2` as a default model parameters. Those allow me to get acceptable results.
 - Chroma was chosen as a vector database.
 - As an embedding model I used `sentence-transformers/all-mpnet-base-v2`.
 
@@ -186,11 +186,11 @@ These factions have developed different stories about the Sundering, which occur
 ```
 
 ### Results analysis
-In my opinion results are good, model is not hallucinating. In the response for the third prompt can be seen a problem. 
+In my opinion results are good, model is not hallucinating. In the response for the third prompt, one can see a problem. 
 The name of the first character is repeated from the first prompt but character itself is not repeated wholly. 
 This can be seen as two different persons as in real live.
 
-Other than this model provides results from `fantasy.md` so the RAG is working and helping model.
+Other than this model provides results from `fantasy.md` so the RAG is working and helping the model.
 
 ---
 Additionally, I have created basic GUI for my own fun and learning process. It works almost exactly the same as CLI version, in this case user must provide story path and chose or write model name.

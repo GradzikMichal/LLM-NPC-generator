@@ -1,0 +1,26 @@
+name: workflow.yml
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches: ["main"]
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Model run
+        run: python src/main.py -s ../docs/fantasy.md --model_args num_ctx=1024, repeat_last_n=-1

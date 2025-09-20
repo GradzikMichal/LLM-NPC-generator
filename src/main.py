@@ -2,7 +2,7 @@ import argparse
 from typing import Iterator
 from rich.console import Console
 from tqdm import tqdm
-
+import torch
 import ollama
 from langchain_ollama import ChatOllama
 from langchain_community.document_loaders import UnstructuredMarkdownLoader, PyPDFLoader, TextLoader
@@ -14,7 +14,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableSerializable
 from langchain_core.output_parsers import StrOutputParser
 
-console = Console()
+console = Console(force_terminal=True)
 
 
 def nargs_into_dict(list_of_str: list[str]) -> dict[str, str | int | float]:
@@ -65,7 +65,7 @@ def get_model(model_name: str) -> None:
 
         Function taken from examples at https://github.com/ollama/ollama-python/blob/main/examples/pull.py.
     """
-    console.log("Model not available locally. Trying to download model.", style="gray")
+    console.log("Model not available locally. Trying to download model.", style="white")
     current_digest, bars = '', {}
     ollama_pull: ollama.ProgressResponse | Iterator[ollama.ProgressResponse] = ollama.pull(model_name, stream=True)
     for response_progress in ollama_pull:
@@ -176,7 +176,7 @@ def prepare_vectorstore(chunked_story: list[Document], rag_path: str, verbose: b
     """
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-mpnet-base-v2",
-        model_kwargs={"device": "cuda"},
+        model_kwargs={"device": "cuda" if torch.cuda.is_available() else "cpu"},
     )
     if rag_path == "":
         vectorstore = Chroma().from_documents(chunked_story, embeddings)

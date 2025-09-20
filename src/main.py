@@ -2,7 +2,7 @@ import argparse
 from typing import Iterator
 from rich.console import Console
 from tqdm import tqdm
-
+import torch
 import ollama
 from langchain_ollama import ChatOllama
 from langchain_community.document_loaders import UnstructuredMarkdownLoader, PyPDFLoader, TextLoader
@@ -176,7 +176,7 @@ def prepare_vectorstore(chunked_story: list[Document], rag_path: str, verbose: b
     """
     embeddings = HuggingFaceEmbeddings(
         model_name="sentence-transformers/all-mpnet-base-v2",
-        model_kwargs={"device": "cuda"},
+        model_kwargs={"device": "cuda" if torch.cuda.is_available() else "cpu"},
     )
     if rag_path == "":
         vectorstore = Chroma().from_documents(chunked_story, embeddings)

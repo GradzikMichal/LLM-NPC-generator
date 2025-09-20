@@ -29,7 +29,7 @@ jobs:
       - name: Creating daemon file
         uses: 1arp/create-a-file-action@0.4.5
         with:
-          path: '/etc/systemd/system/'
+          path: '/etc/systemd/system'
           isAbsolutePath: False
           file: 'ollama.service'
           content: |

@@ -14,7 +14,7 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnablePassthrough, RunnableSerializable
 from langchain_core.output_parsers import StrOutputParser
 
-console = Console()
+console = Console(force_terminal=True)
 
 
 def nargs_into_dict(list_of_str: list[str]) -> dict[str, str | int | float]:
